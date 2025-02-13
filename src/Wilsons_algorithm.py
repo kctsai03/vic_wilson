@@ -58,6 +58,7 @@ def WilsonTree(G) -> tuple:
     n = len(G.nodes)
 
     def Attempt(epsilon):
+        rand_predecessor_calls = 0
         Next = [None] * n
         InTree = [False] * n
         num_roots = 0
@@ -70,8 +71,9 @@ def WilsonTree(G) -> tuple:
                     InTree[u] = True
                     num_roots += 1
                     if num_roots > 1:
-                        return None
+                        return None, rand_predecessor_calls
                 else:
+                    rand_predecessor_calls += 1
                     Next[u] = RandomPredecessor(G, u)
                     u = Next[u]
             u = i
@@ -79,16 +81,18 @@ def WilsonTree(G) -> tuple:
                 InTree[u] = True
                 u = Next[u]
 
-        return Next
+        return Next, rand_predecessor_calls
 
     G = AddSelfLoops(G)
-    epsilon = 1
+    epsilon = 1.0
     tree = None
 
+    total_calls = 0
     while tree == None:
-        epsilon = epsilon / 2
-        tree = Attempt(epsilon)
+        epsilon = epsilon / 2.0
+        tree, calls = Attempt(epsilon)
+        total_calls += calls
 
     edges = tuple(sorted((b, a) for a, b in enumerate(tree) if b is not None))
 
-    return edges
+    return edges, total_calls

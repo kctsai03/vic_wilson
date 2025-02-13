@@ -58,7 +58,7 @@ def generate_random_digraph(num_nodes):
     for u in G.nodes():
       for v in G.nodes():
         if u != v:
-            weight = np.random.poisson(3)
+            weight = 1 #np.random.poisson(3)
             G.add_edge(u, v, weight = weight)
 
     return G

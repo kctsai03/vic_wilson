@@ -22,8 +22,6 @@ import time
 UNIT TESTING FOR VICTREE AND WILSONS WITH A SAMPLE GIVEN GRAPH G
 '''
 
-
-
 ''' CREATE SAMPLE GRAPH G '''
 # create the weighted DiGraph G
 G = nx.DiGraph()

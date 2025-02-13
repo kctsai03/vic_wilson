@@ -28,7 +28,7 @@ def AddSelfLoops(G):
     num_edges = G.size()
     max_weight = max([G[u][v]['weight'] for u, v in G.edges()])
 
-    target_indegree = num_edges * max_weight
+    target_indegree = (G.number_of_nodes() - 1) * max_weight
 
     for node in G.nodes():
         self_loop_weight = target_indegree - G.in_degree(node, weight='weight')
