@@ -56,4 +56,8 @@ ax.text(0.45, 0.55, "Victree's fit: " + eq_v,
 
 ax.legend(loc='upper left', title='Algorithm')
 fig.tight_layout()
+
+plt.savefig("/Users/kyletsai/Desktop/thesis/vic_wilson/plots/vic_wilson_runtime.pdf")
+
 plt.show()
+
