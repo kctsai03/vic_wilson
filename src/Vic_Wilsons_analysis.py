@@ -46,13 +46,9 @@ def run_algorithm(algorithm, G, num_samples):
             trees[wilsonTree] = trees.get(wilsonTree, 0) + 1
             num_tree_calls.append(num_rand_pred_calls)
     return sample_times, trees, invalid_trees, num_tree_calls
-    if algorithm == 'VicTree':
-        return sample_times, trees, invalid_trees
-    elif algorithm == 'WilsonTree':
-        return sample_times, trees, num_tree_calls
 
 # function to calculate the L1 norm distance between the two distributions
-def l1_norm(wilsonTrees, vicTrees, invalid_trees):
+def l1_norm(wilsonTrees, vicTrees):
     # Find all the different graphs that WilsonTrees found 
     # and the number of times they were found to calculate the proportion
     sampled_wilsonTrees = wilsonTrees.keys()
@@ -64,7 +60,7 @@ def l1_norm(wilsonTrees, vicTrees, invalid_trees):
     # Otherwise, set VicTree proportions for valid trees.
     length = len(wilson_dist)
     vic_dist = np.full(length, np.inf)
-    vicTree_samples = sum(vicTrees.values()) - invalid_trees
+    vicTree_samples = sum(vicTrees.values())
     if vicTree_samples: 
         tree_cnts = [vicTrees.get(tree, 0) for tree in sampled_wilsonTrees]
         vic_dist = np.array(tree_cnts) / sum(vicTrees.values())
@@ -104,12 +100,12 @@ def vic_wilson_analysis(NUM_TEST_CASES, NODE_SIZES, NUM_TRIALS, NUM_SAMPLES, SMA
             # vic_sample_times = all the sample times for this trial
             # vicTrees = counts for all sampled trees
             # invalid_trees = number of invalid trees
-            vic_sample_times, vicTrees, invalid_trees, x = run_algorithm('VicTree', G, num_samples)
+            vic_sample_times, vicTrees, invalid_trees, _ = run_algorithm('VicTree', G, num_samples)
 
             # wilson_sample_times = all the sample times for this trial
             # wilsonTrees = counts for all sampled trees
             # wilsonTree_num_calls = number of random predecessor calls
-            wilson_sample_times, wilsonTrees, y, wilsonTree_num_calls = run_algorithm('WilsonTree', G, NUM_SAMPLES)
+            wilson_sample_times, wilsonTrees, _, wilsonTree_num_calls = run_algorithm('WilsonTree', G, NUM_SAMPLES)
 
             # Append average sample time for this trial (this graph) for VicTree and WilsonTree
             vicTree_trial_times.append(np.mean(vic_sample_times))
@@ -123,7 +119,7 @@ def vic_wilson_analysis(NUM_TEST_CASES, NODE_SIZES, NUM_TRIALS, NUM_SAMPLES, SMA
 
 
             # Compute L1 Norm Distance for this trial
-            l1_norm_distance = l1_norm(wilsonTrees, vicTrees, invalid_trees)
+            l1_norm_distance = l1_norm(wilsonTrees, vicTrees)
             trial_distances.append(l1_norm_distance)
 
         # Append average trial time
@@ -161,8 +157,8 @@ NUM_SAMPLES = 1000 # Number of times we sample from the graph
 SMALL_NUM_SAMPLES = 1 
 NUM_TRIALS = 2 # Number of distinct graphs with random weights generated per number of nodes
 
-#NODE_SIZES = list(range(5, 101, 5)) # Testing graphs of node size 5, 10, 15, ... 100
-NODE_SIZES = [5, 8]
+NODE_SIZES = list(range(5, 101, 5)) # Testing graphs of node size 5, 10, 15, ... 100
+
 
 NUM_TEST_CASES = len(NODE_SIZES) # Number of graph sizes that we're testing
 
